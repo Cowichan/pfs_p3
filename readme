@@ -1,0 +1,13 @@
+# add pseudo unique possible login
+
+#<?php
+	// si aucune session n'est ouverte on redirige l'utilisateur
+	if(isset($_SESSION["nom"])==false)
+	{
+		?><script type="text/javascript">
+			alert("accès restreint") ;
+			document.location.href="login_form.php" ;
+		</script><?php
+	}
+?>
+#nécessaire ?
