@@ -40,7 +40,7 @@ include "functions.php"
             <?php
               if (isset($_SESSION['id_user']) AND isset($_SESSION['pseudo']))
               {
-                  echo 'Bonjour ' . $_SESSION['pseudo'] . ' ton id_user est le ' . $_SESSION['id_user'] . ' et ton nom est ' . $_SESSION['nom'] . ' et ton prénom est ' . $_SESSION['prenom'] . ' et ta question secrète est ' . $_SESSION['question'] . ' et ta réponse à la question secrète est ' . $_SESSION['reponse'] . ' et ton mot de passe est ' . $_SESSION['nom'];
+                  echo 'Bonjour ' . $_SESSION['pseudo'] . ' ton id_user est le ' . $_SESSION['id_user'] . ' et ton nom est ' . $_SESSION['nom'] . ' et ton prénom est ' . $_SESSION['prenom'] . ' et ta question secrète est ' . $_SESSION['question'] . ' et ta réponse à la question secrète est ' . $_SESSION['reponse'] . ' et ton mot de passe est ' . $_SESSION['mdp1'];
               }
             ?>
           </p>

@@ -9,6 +9,18 @@ include "database_functions.php";
 //   $_SESSION["id"] = $id ;
 // }
 
+function search_username($username) {
+  global $db;
+  $res = $db->prepare("select count(id_user) as nb_username from account where username=:pseudo") ;
+  $res->execute(array("pseudo"=>$username)) ;
+
+  if($data = $res->rowCount() >0) {
+    return true ;
+  } else {
+    return false ;
+  }
+}
+
 function addVotes() {
     global $db;
     if(isset($_GET["xxx"]))
@@ -178,7 +190,7 @@ function processingLogin() {
   if(isset($_POST['login'])) {
     global $db;
     $username = $_POST['pseudo'];
-    $mdp1 = $_POST['mdp1'];
+    $pass_hache = $_POST['mdp1'];
     // $id_user = $_POST['id_user'];
     // $nom = $_POST['nom'];
 
@@ -187,12 +199,13 @@ function processingLogin() {
         'username' => $username));
     $resultat = $req->fetch();
 
-    if(password_verify($mdp1, $resultat['password'])) {
+    if(password_verify($pass_hache, $resultat['password'])) {
     session_start();
     $_SESSION['id_user'] = $resultat['id_user'];
     $_SESSION['pseudo'] = $username;
     $_SESSION['nom'] = $resultat['nom'];
     $_SESSION['prenom'] = $resultat['prenom'];
+    $_SESSION['mdp1'] = $pass_hache;
     $_SESSION['question'] = $resultat['question'];
     $_SESSION['reponse'] = $resultat['reponse'];
     echo 'Vous êtes connecté !';
@@ -209,7 +222,7 @@ function processingLogin() {
     } else {
       var_dump($resultat);
       echo '<br>';
-      var_dump($mdp1);
+      var_dump($pass_hache);
       echo "baddddddd";
     }
 

@@ -1,6 +1,6 @@
 <?php session_start() ;
 
-include "database_functions.php";
+// include "database_functions.php";
 include "functions.php";
 
 ?>
@@ -20,17 +20,19 @@ if(isset($_POST['submit'])) {
   $nom = $_POST['nom'];
   $prenom = $_POST['prenom'];
   $username = $_POST['pseudo'];
-  // $mdp1 = $_POST['mdp1'];
+  $mdp1 = $_POST['mdp1'];
   $question = $_POST['question'];
   $reponse = $_POST['reponse'];
+
+  $pass_hache = password_hash($mdp1, PASSWORD_DEFAULT);
 	// on récupère les données envoyées par le formulaire
-	$res = $db->prepare("UPDATE account set nom=:nom, prenom=:prenom, username=:nouv_pseudo, question=:question, reponse=:reponse where username=:pseudo") ;
+	$res = $db->prepare("UPDATE account set nom=:nom, prenom=:prenom, username=:nouv_pseudo, password=:pass, question=:question, reponse=:reponse where username=:pseudo") ;
 
 	// on met à jour la base de données
 	// include("database_functions.php") ;
 	// $db = database_connect() ;
   if
-  ($res->execute(array("pseudo"=>$_SESSION["pseudo"], "nom"=>$nom, "prenom"=>$prenom, "question"=>$question, "reponse"=>$reponse, "nouv_pseudo"=>$username))) {
+  ($res->execute(array("pseudo"=>$_SESSION["pseudo"], "nom"=>$nom, "prenom"=>$prenom, "question"=>$question, "reponse"=>$reponse, "nouv_pseudo"=>$username, "pass"=>$pass_hache))) {
     echo "update well";
   } else {
     echo "not updated <br>";

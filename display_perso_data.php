@@ -42,7 +42,7 @@
         </div>
         <div class="form-group">
           <label for="password">password</label> :
-          <input type="text" name="password" id="password" class="form-control" required maxlength="20" value="<?php echo $_SESSION["pseudo"] ; ?>" />
+          <input type="text" name="mdp1" id="password" class="form-control" required maxlength="20" value="<?php echo $_SESSION["mdp1"] ; ?>" />
         </div>
         <div class="form-group">
           <label for="question">question secrète</label> :
