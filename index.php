@@ -40,9 +40,15 @@ include "functions.php"
             <?php
               if (isset($_SESSION['id_user']) AND isset($_SESSION['pseudo']))
               {
-                  echo 'Bonjour ' . $_SESSION['pseudo'] . ' ton id_user est le ' . $_SESSION['id_user'] . ' et ton nom est ' . $_SESSION['nom'] . ' et ton prénom est ' . $_SESSION['prenom'];
+                  echo 'Bonjour ' . $_SESSION['pseudo'] . ' ton id_user est le ' . $_SESSION['id_user'] . ' et ton nom est ' . $_SESSION['nom'] . ' et ton prénom est ' . $_SESSION['prenom'] . ' et ta question secrète est ' . $_SESSION['question'] . ' et ta réponse à la question secrète est ' . $_SESSION['reponse'] . ' et ton mot de passe est ' . $_SESSION['nom'];
               }
             ?>
+          </p>
+          <p>
+              Modifier profil : <a href='display_perso_data.php'><?php echo $_SESSION['pseudo']; ?></a>
+          </p>
+          <p>
+            <a href="logout.php">Se déconnecter</a>
           </p>
           <p>
             <?php
@@ -50,9 +56,7 @@ include "functions.php"
               readActeurs();
             ?>
           </p>
-          <p>
-            <a href="logout.php">Se déconnecter</a>
-          </p>
+
         </div>
 
       </div>

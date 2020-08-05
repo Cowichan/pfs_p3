@@ -26,7 +26,7 @@ processingLogin();
     <![endif]-->
 
     <section class="row">
-      <h1 class="col-lg-12">Connexion</h1>
+      <h1 class="col-lg-12">Coonnexion</h1>
 
       <form class="col-lg-7 offset-lg-1" method="post" action="login_form.php">
         <div class="form-group">

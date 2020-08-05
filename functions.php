@@ -9,12 +9,84 @@ include "database_functions.php";
 //   $_SESSION["id"] = $id ;
 // }
 
-function addComments() {
+function addVotes() {
+    global $db;
+    if(isset($_GET["xxx"]))
+    {
+      $id = (int)$_GET["xxx"] ;
+    }
+      $query = $db->query("select count(vote) as nb_like from vote where vote='like'") ;
+      $data = $query->fetch() ;
+      $nb_like = $data["nb_like"] ;
+      $query->closeCursor() ;
 
+      $query = $db->query("select count(vote) as nb_dislike from vote where vote='dislike'") ;
+      $data = $query->fetch() ;
+      $nb_dislike = $data["nb_dislike"] ;
+      $query->closeCursor() ;
+    ?>
+      <p class="offset-lg-1 col-lg-6">
+        <button class="btn btn-link" onclick="location.href='display_detail_partner.php?xxx='+<?php echo $id ; ?>+'&votex=like' ;"><img src="icons/like.png"/></button>
+        <?php echo $nb_like; ?>
+        <button class="btn btn-link" onclick="location.href='display_detail_partner.php?xxx='+<?php echo $id ; ?>+'&votex=dislike' ;"><img src="icons/dislike.png"/></button>
+        <?php echo $nb_dislike; ?>
+      </p>
+    <?php
 }
 
 function voteCouting() {
+  global $db;
 
+  if(isset($_GET["votex"]) && ((string)$_GET["votex"]=="like" || (string)$_GET["votex"]=='dislike'))
+  {
+    $new_vote = $_GET["votex"] ;
+
+    // on cherche si l'utilisateur a déjà voté pour ce partenaire
+    $res = $db->prepare("select count(vote) as nb_vote from vote where id_user=:user and id_acteur=:acteur") ;
+    $res->execute(array("user"=>$_SESSION["id_user"], "acteur"=>$_GET['xxx'])) ;
+    $nb_vote = $res->fetch() ;
+
+    // si oui :
+    if ($nb_vote["nb_vote"] > 0)
+    {
+      // on récupère le vote de l'utilisateur
+      $query = $db->prepare("select vote from vote where id_user=:user and id_acteur=:acteur") ;
+      $query->execute(array("user"=>$_SESSION["id_user"], "acteur"=>$_GET['xxx'])) ;
+      $vote = $query->fetch() ;
+
+      // on compare le vote enregistré à celui qu'il vient de faire
+      if($vote["vote"]==$new_vote)
+      {
+        // si les deux votes sont identiques on affiche un message
+        if($new_vote=="like")
+        {
+          ?><script>alert("vous avez déjà liké ce partenaire") ;</script><?php
+        }
+
+        else
+        {
+          ?><script>alert("vous avez déjà disliké ce partenaire") ;</script><?php
+        }
+      }
+
+      else
+      {
+        // mise à jour du vote dans la base de données
+        $query->closeCursor() ;
+        $query = $db->prepare("update vote set vote=:vote where id_user=:user and id_acteur=:acteur") ;
+        $query->execute(array("user"=>$_SESSION["id_user"], "acteur"=>$_GET['xxx'], "vote"=>$new_vote)) ;
+        $query->closeCursor() ;
+      }
+    }
+
+    // si non : on créé une nouvelle entrée
+    else
+    {
+      $res->closeCursor() ;
+      $res = $db->prepare("insert into vote(id_user, id_acteur, vote) values(:user, :acteur, :vote)") ;
+      $res->execute(array("user"=>$_SESSION["id_user"], "acteur"=>$_GET['xxx'], "vote"=>$new_vote)) ;
+    }
+  }
 }
 
 function nombreComments() {
@@ -121,7 +193,8 @@ function processingLogin() {
     $_SESSION['pseudo'] = $username;
     $_SESSION['nom'] = $resultat['nom'];
     $_SESSION['prenom'] = $resultat['prenom'];
-
+    $_SESSION['question'] = $resultat['question'];
+    $_SESSION['reponse'] = $resultat['reponse'];
     echo 'Vous êtes connecté !';
 
       // new_session($data["nom"], $data["prenom"], $pseudo, $data["id_user"]) ;
